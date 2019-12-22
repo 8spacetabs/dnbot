@@ -1,5 +1,3 @@
-#!/usr/bin/env ruby
-
 $roles = <<-HEREDOC
 ```md
 BSDs
