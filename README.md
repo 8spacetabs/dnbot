@@ -20,6 +20,6 @@ doas pkg install ruby25-gems && gem install discordrb
 # Usage
 ## All of the above:
 ```
-DNTOKEN="[token]" DNID="[id]" ./dnbot.rb
+DNTOKEN=[token] DNID=[id] ./dnbot.rb
 ```
 ##### dnbot must be run from the src directory
