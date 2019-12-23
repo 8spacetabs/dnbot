@@ -18,7 +18,7 @@ init_time = Time.now.to_i
 =end
 
 require("discordrb")
-load("../aux/dn_heredocs.rb")
+load("../aux/heredocs.rb")
 
 dnbot = Discordrb::Bot.new(
   token: ENV["DNTOKEN"],
