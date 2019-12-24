@@ -1,4 +1,4 @@
-#!/usr/bin/ruby --jit
+#!/usr/bin/ruby
 
 init_time = Time.now.to_i
 
