@@ -34,11 +34,12 @@ command_handler = Discordrb::Commands::CommandBot.new(
 Yt.configure do |config|
   config.api_key = ENV["YTAPIKEY"]
 end
-numberphile = Yt::Channel.new id: "UCoxcjq-8xIDTYp3uz647V5A"
-computerphile = Yt::Channel.new id: "UC9-y-6csu5WGm29I7JiwpnA"
 
 def update_feeds()
-  numberphile_lvc = computerphile.video_count
+  numberphile = Yt::Channel.new id: "UCoxcjq-8xIDTYp3uz647V5A"
+  computerphile = Yt::Channel.new id: "UC9-y-6csu5WGm29I7JiwpnA"
+
+  numberphile_lvc = numberphile.video_count
   computerphile_lvc = computerphile.video_count
 
   loop do
@@ -47,11 +48,11 @@ def update_feeds()
     if numberphile.video_count > numberphile_lvc
       dnbot
         .channel(661703261534945309)
-        .send("new numberphile upload:\nhttps://www.youtube.com/watch?v=#{numberphile.videos.where(order: "date").first.id}"
+        .send("new numberphile upload:\nhttps://www.youtube.com/watch?v=#{numberphile.videos.where(order: "date").first.id}")
     elsif computerphile.video_count > computerphile_lvc
       dnbot
         .channel(546321193117155328)
-        .send("new computerphile upload:\nhttps://www.youtube.com/watch?v=#{computerphile.videos.where(order: "date").first.id}"
+        .send("new computerphile upload:\nhttps://www.youtube.com/watch?v=#{computerphile.videos.where(order: "date").first.id}")
     end
 
     # set every iteration in case video_count decreases
