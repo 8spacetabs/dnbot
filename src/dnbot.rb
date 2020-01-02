@@ -18,7 +18,7 @@ init_time = Time.now.to_i
 =end
 
 require("discordrb")
-require("yt")
+#require("yt")
 load("../aux/heredocs.rb")
 
 dnbot = Discordrb::Bot.new(
@@ -31,11 +31,12 @@ command_handler = Discordrb::Commands::CommandBot.new(
   prefix: ';'
 )
 
+=begin
 Yt.configure do |config|
   config.api_key = ENV["YTAPIKEY"]
 end
 
-def update_feeds()
+Thread.new {
   numberphile = Yt::Channel.new id: "UCoxcjq-8xIDTYp3uz647V5A"
   computerphile = Yt::Channel.new id: "UC9-y-6csu5WGm29I7JiwpnA"
 
@@ -43,7 +44,7 @@ def update_feeds()
   computerphile_lvc = computerphile.video_count
 
   loop do
-    sleep(1800)
+    # sleep(1800)
 
     if numberphile.video_count > numberphile_lvc
       dnbot
@@ -59,9 +60,8 @@ def update_feeds()
     numberphile_lvc = computerphile.video_count
     computerphile_lvc = computerphile.video_count
   end
-end
-feed_updater = Thread.new{update_feeds()}
-feed_updater.join
+}.join
+=end
 
 command_handler.command(:ping) do |event|
   event.channel.start_typing()
