@@ -1,7 +1,5 @@
 #!/usr/bin/ruby
 
-init_time = Time.now.to_i
-
 =begin
   TODO:
     ;unban
@@ -17,26 +15,18 @@ init_time = Time.now.to_i
     ;imagemagick
 =end
 
-require("discordrb")
-#require("yt")
-load("../aux/heredocs.rb")
+require "discordrb"
+require "yt"
 
-dnbot = Discordrb::Bot.new(
-  token: ENV["DNTOKEN"],
-  client_id: ENV["DNID"].to_i
-)
+load "../aux/heredocs.rb"
 
-command_handler = Discordrb::Commands::CommandBot.new(
-  token: ENV["DNTOKEN"],
-  prefix: ';'
-)
+init_time = Time.now.to_i
 
-=begin
-Yt.configure do |config|
-  config.api_key = ENV["YTAPIKEY"]
-end
+feed_thread = Thread.new do
+  Yt.configure do |config|
+    config.api_key = ENV["YTAPIKEY"]
+  end
 
-Thread.new {
   numberphile = Yt::Channel.new id: "UCoxcjq-8xIDTYp3uz647V5A"
   computerphile = Yt::Channel.new id: "UC9-y-6csu5WGm29I7JiwpnA"
 
@@ -44,7 +34,7 @@ Thread.new {
   computerphile_lvc = computerphile.video_count
 
   loop do
-    # sleep(1800)
+    sleep(1800)
 
     if numberphile.video_count > numberphile_lvc
       dnbot
@@ -60,12 +50,21 @@ Thread.new {
     numberphile_lvc = computerphile.video_count
     computerphile_lvc = computerphile.video_count
   end
-}.join
-=end
+end
+
+dnbot = Discordrb::Bot.new(
+  token: ENV["DNTOKEN"],
+  client_id: ENV["DNID"].to_i
+)
+
+command_handler = Discordrb::Commands::CommandBot.new(
+  token: ENV["DNTOKEN"],
+  prefix: ';'
+)
 
 command_handler.command(:ping) do |event|
-  event.channel.start_typing()
-  arg_array = event.content.split()
+  event.channel.start_typing
+  arg_array = event.content.split
 
   event.respond(
     arg_array.length > 1 ?
@@ -79,38 +78,38 @@ command_handler.command(:ping) do |event|
 end
 
 command_handler.command(:time) do |event|
-  event.channel.start_typing()
+  event.channel.start_typing
   event.respond("```\n#{Time.now}\n```")
 end
 
 command_handler.command(:uptime) do |event|
-  event.channel.start_typing()
+  event.channel.start_typing
   current = Time.now.to_i - init_time
   event.respond("```\n/dev/null has been online for #{current / 60 / 60} hours, #{((current / 60) % 60)} minutes\n```")
 end
 
 command_handler.command(:echo) do |event|
-  event.message.delete()
-  event.channel.start_typing()
+  event.message.delete
+  event.channel.start_typing
   event.respond(event.content[5..-1])
 end
 
 command_handler.command(:sysuptime) do |event|
-  event.channel.start_typing()
+  event.channel.start_typing
   event.respond("```\n#{`uptime`}\n```")
 end
 
 command_handler.command(:help) do |event|
-  event.channel.start_typing()
+  event.channel.start_typing
   event.respond($help_msg)
 end
 
 command_handler.command(:purge) do |event|
-  event.channel.start_typing()
+  event.channel.start_typing
   if event.author.highest_role.name =~ /(wheel|root)/
-    arg_array = event.content.split()
+    arg_array = event.content.split
     event.channel.history(arg_array.length > 1 ? arg_array[1].to_i + 1 : 10).each do |message|
-         message.delete()
+         message.delete
     end
     event.respond("#{arg_array[1]} messages deleted!")
   else
@@ -119,8 +118,8 @@ command_handler.command(:purge) do |event|
 end
 
 command_handler.command(:roles) do |event|
-  event.channel.start_typing()
-  arg_array = event.content.split()
+  event.channel.start_typing
+  arg_array = event.content.split
   event.respond($roles) if arg_array.length == 1
 
   arg_array.each do |arg|
@@ -141,14 +140,14 @@ command_handler.command(:roles) do |event|
 end
 
 command_handler.command(:poll) do |event|
-  arg_array = event.content.split()
+  arg_array = event.content.split
   if arg_array.length <3 # uwu
     event.respond("you must supply at least 2 options")
     break
   end
 
   load('../aux/integer_overload.rb')
-  event.message.delete()
+  event.message.delete
   dnbot_message = event.respond(event.content[5..-1])
   (arg_array.length - 1).times do |n|
     dnbot_message.react(n.to_reaction_monkey_edition)
@@ -156,14 +155,14 @@ command_handler.command(:poll) do |event|
 end
 
 command_handler.command(:vote) do |event|
-  event.message.delete()
+  event.message.delete
   dnbot_message = event.respond(event.content[5..-1])
   dnbot_message.react(":upvote:623516945978884097")
   dnbot_message.react(":downvote:623515777185742858")
 end
 
 command_handler.command(:kick) do |event|
-  event.channel.start_typing()
+  event.channel.start_typing
   if event.author.highest_role.name =~ /(wheel|root)/
     event.message.mentions.each do |user|
       event.server.kick(user)
@@ -175,7 +174,7 @@ command_handler.command(:kick) do |event|
 end
 
 command_handler.command(:ban) do |event|
-  event.channel.start_typing()
+  event.channel.start_typing
   if event.author.highest_role.name =~ /(wheel|root)/
     event.message.mentions.each do |user|
       event.server.ban(user)
@@ -190,7 +189,7 @@ end
 =begin
 not working for some reason
 command_handler.command(:unban) do |event|
-  event.channel.start_typing()
+  event.channel.start_typing
   if event.author.highest_role.name =~ /(wheel|root)/
     event.message.mentions.each do |user|
       event.server.unban(user)
@@ -247,4 +246,9 @@ command_handler.member_join do |event|
     )
 end
 
-command_handler.run()
+command_thread = Thread.new do
+  command_handler.run
+end
+
+feed_thread.join
+command_thread.join
