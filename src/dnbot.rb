@@ -11,9 +11,9 @@ init_time = Time.now.to_i
     ;ddg query
     ;rem reminder
     ;ffmpeg
-    ;gcc
+    ;gcc - sanitise input
+    ;ruby - ditto
     ;man
-    ;ruby
     ;imagemagick
 =end
 

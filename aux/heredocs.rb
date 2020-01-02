@@ -19,6 +19,7 @@ Distros
 + Kali
 + Manjaro
 + Mint
++ MXLinux
 + NixOS
 + OpenSUSE
 + ParrotOS
@@ -91,7 +92,7 @@ commands:
   - if no arguments are specified displays all available roles:
         `;roles`
   - if arguments are specified adds/removes roles from executing user:
-        `;roles (add|remove) role ..`    
+        `;roles (add|remove) role1 role2 ..`    
 
 + ;time
   - shows the time via Ruby's Time#now()
