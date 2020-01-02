@@ -61,6 +61,7 @@ def update_feeds()
   end
 end
 feed_updater = Thread.new{update_feeds()}
+feed_updater.join
 
 command_handler.command(:ping) do |event|
   event.channel.start_typing()
