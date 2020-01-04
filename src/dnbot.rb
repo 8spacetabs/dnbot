@@ -2,6 +2,9 @@
 
 =begin
   TODO:
+    better random yt videos
+    send emojis/pictures of dice/coin faces for ;roll and ;flip
+
     ;unban
     ;countdown n
     ;tstart
@@ -61,6 +64,14 @@ command_handler = Discordrb::Commands::CommandBot.new(
   token: ENV["DNTOKEN"],
   prefix: ';'
 )
+
+commmand_handler.command(:roll) do |event|
+  event.respond("You rolled a #{rand(6)}")
+end
+
+command_handler.command(:flip) do |event|
+  event.respond(rand(10) < 5 ? "head" : "tails")
+end
 
 command_handler.command(:numberphile) do |event|
   event.respond("https://www.youtube.com/watch?v=#{@numberphile.videos.where(q: rand(97..122).chr).first.id}")

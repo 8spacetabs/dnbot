@@ -98,10 +98,10 @@ commands:
         `;roles (add|remove) role1 role2 ..`    
 
 + ;time
-  - shows the time via Ruby's Time#now()
+  - shows the time
 
 + ;uptime
-  - shows the bot's uptime via /bin/uptime
+  - shows the bot's uptime in wall clock format
 
 + ;sysuptime
   - shows the bot host's uptime via /bin/uptime
@@ -120,5 +120,11 @@ commands:
 
 + ;computerphile
   - get a random computerphile video
+
++ ;flip
+  - flip a coin
+
++ ;roll
+  - roll a dice
 ```
 HEREDOC
