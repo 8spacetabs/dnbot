@@ -269,5 +269,18 @@ command_thread = Thread.new do
   command_handler.run
 end
 
+# too many updates (like 9000 or something) will exceed the stack depth
+command_handler.command(:update) do |event|
+  if event.author.highest_role.name =~ /(wheel|root)/
+    event.respond(`git pull`)
+    feed_thread.kill
+    command_thread.kill
+    load "dnbot.rb"
+    event.respond("update was successful")
+  else
+    event.respond("only root can do that")
+  end
+end
+
 feed_thread.join
 command_thread.join
