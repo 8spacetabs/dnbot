@@ -85,23 +85,26 @@ $help_msg = <<-HEREDOC
 ```md
 commands:
 =========
++ ;help
+  - display this help message
+
 + ;ping
-  - unix ping command: `;ping 1.0.0.1`
+  - unix ping command: `;ping [IPv4 address]`
 
 + ;roles
-  - if no arguments are specified displays all available roles:
+  - if no arguments are specified all available roles are listed:
         `;roles`
-  - if arguments are specified adds/removes roles from executing user:
+  - add and remove subcommands add/remove roles from executing user respectively:
         `;roles (add|remove) role1 role2 ..`    
 
 + ;time
   - shows the time via Ruby's Time#now()
 
 + ;uptime
-  - shows the bot's uptime
+  - shows the bot's uptime via /bin/uptime
 
 + ;sysuptime
-  - shows the bot's host's uptime via /usr/bin/uptime
+  - shows the bot host's uptime via /bin/uptime
 
 + ;echo
   - unix echo command
@@ -112,8 +115,10 @@ commands:
 + ;poll
   - start a poll for up to 10 options
 
-+ ;help
-  - display this help message
++ ;numberphile
+  - get a random numberphile video
+
++ ;computerphile
+  - get a random computerphile video
 ```
 HEREDOC
-

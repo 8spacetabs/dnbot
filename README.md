@@ -23,4 +23,4 @@ doas pkg install ruby25-gems && gem install discordrb yt
 YTAPIKEY=[youtube api key] DNTOKEN=[token] DNID=[id] ./dnbot.rb
 ```
 ##### dnbot only requires read-only access to the youtube analytics api
-#### dnbot must be run from the src directory
+##### dnbot must be run from the src directory

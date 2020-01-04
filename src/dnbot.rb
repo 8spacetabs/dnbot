@@ -27,28 +27,28 @@ feed_thread = Thread.new do
     config.api_key = ENV["YTAPIKEY"]
   end
 
-  numberphile = Yt::Channel.new id: "UCoxcjq-8xIDTYp3uz647V5A"
-  computerphile = Yt::Channel.new id: "UC9-y-6csu5WGm29I7JiwpnA"
+  @numberphile = Yt::Channel.new id: "UCoxcjq-8xIDTYp3uz647V5A"
+  @computerphile = Yt::Channel.new id: "UC9-y-6csu5WGm29I7JiwpnA"
 
-  numberphile_lvc = numberphile.video_count
-  computerphile_lvc = computerphile.video_count
+  numberphile_lvc = @numberphile.video_count
+  computerphile_lvc = @computerphile.video_count
 
   loop do
     sleep(1800)
 
-    if numberphile.video_count > numberphile_lvc
+    if @numberphile.video_count > numberphile_lvc
       dnbot
         .channel(661703261534945309)
-        .send("new numberphile upload:\nhttps://www.youtube.com/watch?v=#{numberphile.videos.where(order: "date").first.id}")
-    elsif computerphile.video_count > computerphile_lvc
+        .send("new numberphile upload:\nhttps://www.youtube.com/watch?v=#{@numberphile.videos.where(order: "date").first.id}")
+    elsif @computerphile.video_count > computerphile_lvc
       dnbot
         .channel(546321193117155328)
-        .send("new computerphile upload:\nhttps://www.youtube.com/watch?v=#{computerphile.videos.where(order: "date").first.id}")
+        .send("new computerphile upload:\nhttps://www.youtube.com/watch?v=#{@computerphile.videos.where(order: "date").first.id}")
     end
 
     # set every iteration in case video_count decreases
-    numberphile_lvc = computerphile.video_count
-    computerphile_lvc = computerphile.video_count
+    numberphile_lvc = @computerphile.video_count
+    computerphile_lvc = @computerphile.video_count
   end
 end
 
@@ -61,6 +61,14 @@ command_handler = Discordrb::Commands::CommandBot.new(
   token: ENV["DNTOKEN"],
   prefix: ';'
 )
+
+command_handler.command(:numberphile) do |event|
+  event.respond("https://www.youtube.com/watch?v=#{@numberphile.videos.where(q: rand(97..122).chr).first.id}")
+end
+
+command_handler.command(:computerphile) do |event|
+  event.respond("https://www.youtube.com/watch?v=#{@computerphile.videos.where(q: rand(97..122).chr).first.id}")
+end
 
 command_handler.command(:ping) do |event|
   event.channel.start_typing
