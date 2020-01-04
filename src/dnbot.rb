@@ -272,9 +272,11 @@ end
 # too many updates (like 9000 or something) will exceed the stack depth
 command_handler.command(:update) do |event|
   if event.author.highest_role.name =~ /(wheel|root)/
-    event.respond(`git pull`)
+    event.respond("```\n#{`git pull`}\n```")
+=begin
     feed_thread.kill
     command_thread.kill
+=end
     load "dnbot.rb"
     event.respond("update was successful")
   else
