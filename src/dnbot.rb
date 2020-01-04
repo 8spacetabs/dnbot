@@ -65,9 +65,11 @@ command_handler = Discordrb::Commands::CommandBot.new(
   prefix: ';'
 )
 
+=begin
 command_handler.command(:test) do |event|
   event.respond("I'm alive!")
 end
+=end
 
 command_handler.command(:roll) do |event|
   event.respond("You rolled a #{rand(1..6)}")
@@ -210,18 +212,6 @@ command_handler.command(:ban) do |event|
 end
 
 =begin
-not working for some reason
-command_handler.command(:unban) do |event|
-  event.channel.start_typing
-  if event.author.highest_role.name =~ /(wheel|root)/
-    event.message.mentions.each do |user|
-      event.server.unban(user)
-    end
-    event.respond("unbanned!")
-  else
-    event.respond("only root can do that..")
-  end
-end
 =end
 
 command_handler.command(:mute) do |event|
@@ -273,20 +263,41 @@ command_thread = Thread.new do
   command_handler.run
 end
 
+=begin broken stuff
+# no idea why this doesn't work
+command_handler.command(:unban) do |event|
+  event.channel.start_typing
+  if event.author.highest_role.name =~ /(wheel|root)/
+    event.message.mentions.each do |user|
+      event.server.unban(user)
+    end
+    event.respond("unbanned!")
+  else
+    event.respond("only root can do that..")
+  end
+end
+
 # too many updates (like 9000 or something) will exceed the stack depth
 command_handler.command(:update) do |event|
   if event.author.highest_role.name =~ /(wheel|root)/
     event.respond("```\n#{`git pull`}\n```")
-=begin
-    feed_thread.kill
-    command_thread.kill
-=end
     load "dnbot.rb"
-    event.respond("update was successful")
   else
     event.respond("only root can do that")
   end
 end
 
-feed_thread.join
+# this either breaks ruby or sends the discord API fitting
+if command_thread.alive?
+  command_thread.kill
+  command_thread.join
+  feed_thread.kill
+  feed_thread.join
+elsif
+  command_thread.join
+  feed_thread.join
+end
+=end
+
 command_thread.join
+feed_thread.join
