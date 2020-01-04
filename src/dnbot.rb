@@ -66,7 +66,7 @@ command_handler = Discordrb::Commands::CommandBot.new(
 )
 
 command_handler.command(:roll) do |event|
-  event.respond("You rolled a #{rand(6)}")
+  event.respond("You rolled a #{rand(1..6)}")
 end
 
 command_handler.command(:flip) do |event|
