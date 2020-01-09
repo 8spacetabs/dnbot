@@ -115,11 +115,11 @@ commands:
 + ;poll
   - start a poll for up to 10 options
 
-+ ;numberphile
-  - get a random numberphile video
++ ;numberphile [single word query]
+  - search youtube for a numberphile video
 
-+ ;computerphile
-  - get a random computerphile video
++ ;computerphile [single word query]
+  - search youtube for a computerphile video
 
 + ;flip
   - flip a coin
