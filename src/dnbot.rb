@@ -269,5 +269,5 @@ command_handler.command(:unban) do |event|
 end
 =end
 
-command_thread.join
 feed_thread.join
+command_thread.join
