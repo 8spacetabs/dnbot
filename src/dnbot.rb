@@ -65,12 +65,6 @@ command_handler = Discordrb::Commands::CommandBot.new(
   prefix: ';'
 )
 
-=begin
-command_handler.command(:test) do |event|
-  event.respond("I'm alive!")
-end
-=end
-
 command_handler.command(:roll) do |event|
   event.respond("You rolled a #{rand(1..6)}")
 end
@@ -80,11 +74,11 @@ command_handler.command(:flip) do |event|
 end
 
 command_handler.command(:numberphile) do |event|
-  event.respond("https://www.youtube.com/watch?v=#{@numberphile.videos.where(q: rand(97..122).chr).first.id}")
+  event.respond("https://www.youtube.com/watch?v=#{@numberphile.videos.where(q: event.content.split[1]).first.id}")
 end
 
 command_handler.command(:computerphile) do |event|
-  event.respond("https://www.youtube.com/watch?v=#{@computerphile.videos.where(q: rand(97..122).chr).first.id}")
+  event.respond("https://www.youtube.com/watch?v=#{@computerphile.videos.where(q: event.content.split[1]).first.id}")
 end
 
 command_handler.command(:ping) do |event|
@@ -211,9 +205,6 @@ command_handler.command(:ban) do |event|
   nil
 end
 
-=begin
-=end
-
 command_handler.command(:mute) do |event|
   if event.author.highest_role.name =~ /(wheel|root)/
     event.message.mentions.each do |user|
@@ -263,7 +254,7 @@ command_thread = Thread.new do
   command_handler.run
 end
 
-=begin broken stuff
+=begin
 # no idea why this doesn't work
 command_handler.command(:unban) do |event|
   event.channel.start_typing
@@ -275,27 +266,6 @@ command_handler.command(:unban) do |event|
   else
     event.respond("only root can do that..")
   end
-end
-
-# too many updates (like 9000 or something) will exceed the stack depth
-command_handler.command(:update) do |event|
-  if event.author.highest_role.name =~ /(wheel|root)/
-    event.respond("```\n#{`git pull`}\n```")
-    load "dnbot.rb"
-  else
-    event.respond("only root can do that")
-  end
-end
-
-# this either breaks ruby or sends the discord API fitting
-if command_thread.alive?
-  command_thread.kill
-  command_thread.join
-  feed_thread.kill
-  feed_thread.join
-elsif
-  command_thread.join
-  feed_thread.join
 end
 =end
 
