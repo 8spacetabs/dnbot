@@ -74,11 +74,11 @@ command_handler.command(:flip) do |event|
 end
 
 command_handler.command(:numberphile) do |event|
-  event.respond("https://www.youtube.com/watch?v=#{@numberphile.videos.where(q: event.content.split[1..-1]).first.id}")
+  event.respond("https://www.youtube.com/watch?v=#{@numberphile.videos.where(q: event.content.split[1]).first.id}")
 end
 
 command_handler.command(:computerphile) do |event|
-  event.respond("https://www.youtube.com/watch?v=#{@computerphile.videos.where(q: event.content.split[1..-1]).first.id}")
+  event.respond("https://www.youtube.com/watch?v=#{@computerphile.videos.where(q: event.content.split[1]).first.id}")
 end
 
 command_handler.command(:ping) do |event|
