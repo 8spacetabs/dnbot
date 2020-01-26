@@ -238,7 +238,7 @@ end
 
 command_handler.member_join do |event|
   dnbot
-    .channel(555197515209768971)
+    .channel(546352177866866688)
     .send(
       "#{event.user.mention}" +
       "Welcome to /dev/null - you are member \##{
