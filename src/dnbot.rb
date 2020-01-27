@@ -73,6 +73,19 @@ command_handler.command(:flip) do |event|
   event.respond(rand(10) < 5 ? "head" : "tails")
 end
 
+command_handler.command(:ask) do |event|
+  event.respond(
+    <<-MSG
+      When asking a technical question give as much context as possible.
+      If you get an error, send the error.
+      If your program is behaving unexpectedly, send relevant code snippets
+
+      Finally, don't ask to ask. "Can someone help me with X?" is annoying
+      and much less productive than just asking your question.
+    MSG
+  )
+end
+
 command_handler.command(:numberphile) do |event|
   event.respond("https://www.youtube.com/watch?v=#{@numberphile.videos.where(q: event.content.split[1]).first.id}")
 end
