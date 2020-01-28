@@ -19,41 +19,10 @@
 =end
 
 require "discordrb"
-require "yt"
 
 load "../aux/heredocs.rb"
 
 init_time = Time.now.to_i
-
-feed_thread = Thread.new do
-  Yt.configure do |config|
-    config.api_key = ENV["YTAPIKEY"]
-  end
-
-  @numberphile = Yt::Channel.new id: "UCoxcjq-8xIDTYp3uz647V5A"
-  @computerphile = Yt::Channel.new id: "UC9-y-6csu5WGm29I7JiwpnA"
-
-  numberphile_lvc = @numberphile.video_count
-  computerphile_lvc = @computerphile.video_count
-
-  loop do
-    sleep(1800)
-
-    if @numberphile.video_count > numberphile_lvc
-      dnbot
-        .channel(661703261534945309)
-        .send("new numberphile upload:\nhttps://www.youtube.com/watch?v=#{@numberphile.videos.where(order: "date").first.id}")
-    elsif @computerphile.video_count > computerphile_lvc
-      dnbot
-        .channel(546321193117155328)
-        .send("new computerphile upload:\nhttps://www.youtube.com/watch?v=#{@computerphile.videos.where(order: "date").first.id}")
-    end
-
-    # set every iteration in case video_count decreases
-    numberphile_lvc = @computerphile.video_count
-    computerphile_lvc = @computerphile.video_count
-  end
-end
 
 dnbot = Discordrb::Bot.new(
   token: ENV["DNTOKEN"],
@@ -75,23 +44,36 @@ end
 
 command_handler.command(:ask) do |event|
   event.respond(
-    <<-MSG
-      When asking a technical question give as much context as possible.
-      If you get an error, send the error.
-      If your program is behaving unexpectedly, send relevant code snippets
+<<-MSG
+When asking a technical question give as much context as possible.
+If you get an error, send the error.
+If your program is behaving unexpectedly, send relevant code snippets
 
-      Finally, don't ask to ask. "Can someone help me with X?" is annoying
-      and much less productive than just asking your question.
-    MSG
+Finally, don't ask to ask. "Can someone help me with X?" is annoying
+and much less productive than just asking your question.
+
+For further reference: <http://xyproblem.info/> <http://catb.org/esr/faqs/smart-questions.html>
+MSG
   )
 end
 
-command_handler.command(:numberphile) do |event|
-  event.respond("https://www.youtube.com/watch?v=#{@numberphile.videos.where(q: event.content.split[1]).first.id}")
-end
+command_handler.command(:hackerman) do |event|
+  event.message.delete
+  event.respond(
+<<-MSG
+Woah there! You have been s t o p p e d.
+If you are seeing this you have requested or advertised an illegal service
+Please git good and familiarise yourself with the following:
 
-command_handler.command(:computerphile) do |event|
-  event.respond("https://www.youtube.com/watch?v=#{@computerphile.videos.where(q: event.content.split[1]).first.id}")
+<https://en.wikipedia.org/wiki/Computer_Misuse_Act_1990>
+<https://en.wikipedia.org/wiki/Computer_Fraud_and_Abuse_Act>
+
+If these laws aren't relevant to you, seek out and read the ones which are.
+
+We are not idiots. If you are trying to abuse a system which is not yours
+*we will know* and *you will be banned* if you refuse to follow our #rules.
+MSG
+  )
 end
 
 command_handler.command(:ping) do |event|
@@ -171,7 +153,7 @@ command_handler.command(:roles) do |event|
   nil
 end
 
-command_handler.command(:poll) do |event|
+command_handler.command(:vote) do |event|
   arg_array = event.content.split
   if arg_array.length <3 # uwu
     event.respond("you must supply at least 2 options")
@@ -186,11 +168,13 @@ command_handler.command(:poll) do |event|
   end
 end
 
-command_handler.command(:vote) do |event|
+command_handler.command(:poll) do |event|
   event.message.delete
   dnbot_message = event.respond(event.content[5..-1])
   dnbot_message.react(":upvote:623516945978884097")
   dnbot_message.react(":downvote:623515777185742858")
+
+  # TODO: mention @Polls
 end
 
 command_handler.command(:kick) do |event|
@@ -282,5 +266,4 @@ command_handler.command(:unban) do |event|
 end
 =end
 
-feed_thread.join
 command_thread.join

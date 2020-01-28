@@ -126,5 +126,11 @@ commands:
 
 + ;roll
   - roll a dice
+
++ ;hackerman
+  - feel free to spam this but only in the presence of a skid
+
++ ;ask
+  - for people asking if they can ask a question, please don't spam this one
 ```
 HEREDOC
