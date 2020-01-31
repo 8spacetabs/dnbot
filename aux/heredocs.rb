@@ -62,6 +62,7 @@ Programming languages
 + Shell
 + SQL
 + Swift
++ TypeScript
 WMs/DEs
 =====
 + bspwm
