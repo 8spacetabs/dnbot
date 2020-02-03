@@ -7,8 +7,7 @@ BSDs
 + GhostBSD
 + NetBSD
 + OpenBSD
-+ TrueOS
-Distros
++ TrueOS Distros
 =======
 + Alpine
 + Arch
@@ -115,12 +114,6 @@ commands:
 
 + ;poll
   - start a poll for up to 10 options
-
-+ ;numberphile [single word query]
-  - search youtube for a numberphile video
-
-+ ;computerphile [single word query]
-  - search youtube for a computerphile video
 
 + ;flip
   - flip a coin
