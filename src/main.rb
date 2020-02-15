@@ -1,37 +1,19 @@
 #!/usr/bin/ruby
 
-=begin
-  TODO:
-    better random yt videos
-    send emojis/pictures of dice/coin faces for ;roll and ;flip
-
-    ;unban
-    ;countdown n
-    ;tstart
-    ;tstop
-    ;ddg query
-    ;rem reminder
-    ;ffmpeg
-    ;gcc - sanitise input
-    ;ruby - ditto
-    ;man
-    ;imagemagick
-=end
-
 require "discordrb"
-
 load "../aux/heredocs.rb"
+load "../config.rb"
 
 init_time = Time.now.to_i
 
 dnbot = Discordrb::Bot.new(
-  token: ENV["DNTOKEN"],
-  client_id: ENV["DNID"].to_i
+  token: TOKEN,
+  client_id: ID
 )
 
 command_handler = Discordrb::Commands::CommandBot.new(
-  token: ENV["DNTOKEN"],
-  prefix: ';'
+  token: TOKEN,
+  prefix: PREFIX
 )
 
 command_handler.command(:roll) do |event|
@@ -39,41 +21,40 @@ command_handler.command(:roll) do |event|
 end
 
 command_handler.command(:flip) do |event|
-  event.respond(rand(10) < 5 ? "head" : "tails")
+  event.respond(rand(10) < 5 ? "heads" : "tails")
 end
 
 command_handler.command(:ask) do |event|
-  event.respond(
-<<-MSG
-When asking a technical question give as much context as possible.
-If you get an error, send the error.
-If your program is behaving unexpectedly, send relevant code snippets
-
-Finally, don't ask to ask. "Can someone help me with X?" is annoying
-and much less productive than just asking your question.
-
-For further reference: <http://xyproblem.info/> <http://catb.org/esr/faqs/smart-questions.html>
-MSG
-  )
+  event.respond($ask_paste)
 end
 
 command_handler.command(:hackerman) do |event|
   event.message.delete
-  event.respond(
-<<-MSG
-Woah there! You have been s t o p p e d.
-If you are seeing this you have requested or advertised an illegal service
-Please git good and familiarise yourself with the following:
+  event.respond($hackerman_paste)
+end
 
-<https://en.wikipedia.org/wiki/Computer_Misuse_Act_1990>
-<https://en.wikipedia.org/wiki/Computer_Fraud_and_Abuse_Act>
+command_handler.command(:remindme) do |event|
+  arg_array = event.content.split
 
-If these laws aren't relevant to you, seek out and read the ones which are.
-
-We are not idiots. If you are trying to abuse a system which is not yours
-*we will know* and *you will be banned* if you refuse to follow our #rules.
-MSG
-  )
+  if arg_array.length == 3
+    Thread.new {
+      sleep arg_array[1].to_i * (
+        case arg_array[2]
+          when "seconds" then 1
+          when "minutes" then 60
+          when "hours"   then 3600
+        end
+      )
+      event.respond(
+        "#{event.user.mention}" +
+        "You requested a reminder #{arg_array[1]} #{arg_array[2]} ago:\n" + 
+        "https://discordapp.com/channels/#{event.server.id}/#{event.channel.id}/#{event.message.id}"
+      )
+    }.join
+  else
+    event.respond("Invalid arguments, see ;help output")
+  end
+  nil
 end
 
 command_handler.command(:ping) do |event|
@@ -99,7 +80,7 @@ end
 command_handler.command(:uptime) do |event|
   event.channel.start_typing
   current = Time.now.to_i - init_time
-  event.respond("```\n/dev/null has been online for #{current / 60 / 60} hours, #{((current / 60) % 60)} minutes\n```")
+  event.respond("```\n#{BOT_NAME} has been online for #{current / 60 / 60} hours, #{((current / 60) % 60)} minutes\n```")
 end
 
 command_handler.command(:echo) do |event|
@@ -120,14 +101,14 @@ end
 
 command_handler.command(:purge) do |event|
   event.channel.start_typing
-  if event.author.highest_role.name =~ /(wheel|root)/
+  if event.author.highest_role.name =~ ADMIN_ROLES
     arg_array = event.content.split
     event.channel.history(arg_array.length > 1 ? arg_array[1].to_i + 1 : 10).each do |message|
          message.delete
     end
     event.respond("#{arg_array[1]} messages deleted!")
   else
-    event.respond("only root can do that")
+    event.respond("I'm sorry #{event.author.name}, I'm afraid I can't do that.")
   end
 end
 
@@ -136,134 +117,123 @@ command_handler.command(:roles) do |event|
   arg_array = event.content.split
   event.respond($roles) if arg_array.length == 1
 
+  message = ""
   arg_array.each do |arg|
     event.server.roles.each do |role|
       if arg.downcase == role.name.downcase
         case arg_array[1]
           when "add"
             event.user.add_role(role.id)
-            event.respond("gave you #{role.name}!")
           when "remove"
             event.user.remove_role(role.id)
-            event.respond("took away #{role.name}!")
         end
+        message += role.name + ' '
       end
     end
+  end
+
+  case arg_array[1]
+    when "add"
+      event.respond("roles added: #{message}")
+    when "remove"
+      event.respond("roles removed: #{message}")
   end
   nil
 end
 
-command_handler.command(:vote) do |event|
+command_handler.command(:poll) do |event|
   arg_array = event.content.split
   if arg_array.length <3 # uwu
     event.respond("you must supply at least 2 options")
     break
   end
 
-  load('../aux/integer_overload.rb')
+  load("../aux/integer_overload.rb")
   event.message.delete
   dnbot_message = event.respond(event.content[5..-1])
   (arg_array.length - 1).times do |n|
     dnbot_message.react(n.to_reaction_monkey_edition)
   end
+
+  nil
 end
 
-command_handler.command(:poll) do |event|
+command_handler.command(:vote) do |event|
   event.message.delete
   dnbot_message = event.respond(event.content[5..-1])
-  dnbot_message.react(":upvote:623516945978884097")
-  dnbot_message.react(":downvote:623515777185742858")
-
-  # TODO: mention @Polls
+  dnbot_message.react(VOTE_YES_EMOJI)
+  dnbot_message.react(VOTE_NO_EMOJI)
 end
 
 command_handler.command(:kick) do |event|
   event.channel.start_typing
-  if event.author.highest_role.name =~ /(wheel|root)/
+  if event.author.highest_role.name =~ ADMIN_ROLES
     event.message.mentions.each do |user|
       event.server.kick(user)
     end
-    event.respond("kicked")
+    event.respond("user was kicked")
   else
-    event.respond("only root can do that")
+    event.respond("I'm sorry #{event.author.name}, I'm afraid I can't do that.")
   end
 end
 
 command_handler.command(:ban) do |event|
   event.channel.start_typing
-  if event.author.highest_role.name =~ /(wheel|root)/
+  if event.author.highest_role.name =~ ADMIN_ROLES
     event.message.mentions.each do |user|
       event.server.ban(user)
-      event.respond("#{user.name} was banned")
+      event.respond("user was banned")
     end
   else
-    event.respond("only root can do that")
+    event.respond("I'm sorry #{event.author.name}, I'm afraid I can't do that.")
   end
   nil
 end
 
 command_handler.command(:mute) do |event|
-  if event.author.highest_role.name =~ /(wheel|root)/
+  if event.author.highest_role.name =~ ADMIN_ROLES
     event.message.mentions.each do |user|
-      user.on(event.server)&.add_role(546364599432249345)
+      user.on(event.server)&.add_role(MUTE_ROLE_ID)
     end
-    event.respond("muted")
+    event.respond("#{user.name} was muted")
   else
-    event.respond("only root can do that")
+    event.respond("I'm sorry #{event.author.name}, I'm afraid I can't do that.")
   end
 end
 
 command_handler.command(:unmute) do |event|
-  if event.author.highest_role.name =~ /(wheel|root)/
+  if event.author.highest_role.name =~ ADMIN_ROLES
     event.message.mentions.each do |user|
-      user.on(event.server)&.remove_role(546364599432249345)
+      user.on(event.server)&.remove_role(MUTE_ROLE_ID)
     end
     event.respond("unmuted")
   else
-    event.respond("only root can do that")
+    event.respond("I'm sorry #{event.author.name}, I'm afraid I can't do that.")
   end
 end
 
 command_handler.command(:kill) do |event|
-  if event.author.highest_role.name =~ /(wheel|root)/
+  if event.author.highest_role.name =~ ADMIN_ROLES
     event.respond("goodbye")
     exit 1
   else
-    event.respond("only root can do that")
+    event.respond("I'm sorry #{event.author.name}, I'm afraid I can't do that.")
   end
 end
 
 command_handler.member_join do |event|
+  event.user.add_role(DEFAULT_ROLE_ID) if DEFAULT_ROLE
   dnbot
-    .channel(546352177866866688)
+    .channel(JOIN_MSG_CHAN)
     .send(
       "#{event.user.mention}" +
-      "Welcome to /dev/null - you are member \##{
+      "Welcome to #{SERVER_NAME} - you are member \##{
         event.server.member_count -
         event.server.members.select(&:bot_account?).length
       }\n" + 
-      "send `;roles` in #{dnbot.channel(555197515209768971).mention} to see roles\n" +
+      "send `;roles` to see roles\n" +
       "send `;help` to get help"
     )
 end
 
-command_thread = Thread.new do
-  command_handler.run
-end
-
-=begin
-# no idea why this doesn't work
-command_handler.command(:unban) do |event|
-  event.channel.start_typing
-  if event.author.highest_role.name =~ /(wheel|root)/
-    event.message.mentions.each do |user|
-      event.server.unban(user)
-    end
-    event.respond("unbanned!")
-  else
-    event.respond("only root can do that..")
-  end
-end
-=end
-
-command_thread.join
+command_handler.run.update_status("online", "test", nil, 0, false, 0)
