@@ -1,4 +1,4 @@
-The Ruby interpreter and the dicordrb gem are required to host crevolute:
+The Ruby interpreter and the dicordrb gem are required to host dnbot:
 
 # Installation
 
@@ -19,7 +19,8 @@ doas pkg install ruby25-gems && gem install discordrb
 
 # Usage
 ## All of the above:
+copy `blank.config.rb` to a new file called `config.rb` and fill in the values in the copied file before running main.rb:
 ```
-CRTOKEN=[token] CRNID=[id] ./main.rb
+./main.rb
 ```
 ##### main.rb must be run from the src directory
