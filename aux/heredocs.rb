@@ -144,7 +144,7 @@ Please git good and familiarise yourself with the following:
 If these laws aren't relevant to you, seek out and read the ones which are.
 
 We are not idiots. If you are trying to abuse a system which is not yours
-*we will know* and *you will be banned* if you refuse to follow our #rules.
+*we will know* and *you will be banned* if you refuse to follow our rules.
 HEREDOC
 
 $ask_paste = <<-HEREDOC

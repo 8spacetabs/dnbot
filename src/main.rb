@@ -33,10 +33,21 @@ command_handler.command(:hackerman) do |event|
   event.respond($hackerman_paste)
 end
 
+command_handler.command(:zoomer) do |event|
+  if event.author.highest_role.name =~ ADMIN_ROLES
+    event.message.mentions.each do |user|
+      user.on(event.server)&.add_role(638446972227026954)
+    end
+  else
+    event.respond("I'm sorry #{event.author.name}, I'm afraid I can't do that.")
+  end
+  nil
+end
+
 command_handler.command(:remindme) do |event|
   arg_array = event.content.split
 
-  if arg_array.length == 3
+  if arg_array[1].respond_to?(:to_i) && arg_array[2] =~ /(seconds|minutes|hours)/
     Thread.new {
       sleep arg_array[1].to_i * (
         case arg_array[2]
@@ -59,6 +70,8 @@ end
 
 command_handler.command(:ping) do |event|
   event.channel.start_typing
+  event.respond("I can't be bothered to implement a safe ;ping")
+=begin
   arg_array = event.content.split
 
   event.respond(
@@ -70,6 +83,8 @@ command_handler.command(:ping) do |event|
     :
       "```sh\n#{`ping -w 3 1.1.1.1`}\n```"
   )
+=end
+  nil
 end
 
 command_handler.command(:time) do |event|
@@ -224,7 +239,7 @@ end
 command_handler.member_join do |event|
   event.user.add_role(DEFAULT_ROLE_ID) if DEFAULT_ROLE
   dnbot
-    .channel(JOIN_MSG_CHAN)
+    .channel(JOIN_MSG_CHAN_ID)
     .send(
       "#{event.user.mention}" +
       "Welcome to #{SERVER_NAME} - you are member \##{
