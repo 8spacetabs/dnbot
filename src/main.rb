@@ -251,4 +251,4 @@ command_handler.member_join do |event|
     )
 end
 
-command_handler.run.update_status("online", "test", nil, 0, false, 0)
+command_handler.run
