@@ -4,8 +4,7 @@ require "discordrb"
 load "../aux/heredocs.rb"
 load "../config.rb"
 
-init_time = Time.now.to_i
-
+init_time = Time.now.to_i 
 dnbot = Discordrb::Bot.new(
   token: TOKEN,
   client_id: ID
@@ -257,7 +256,23 @@ command_handler.member_join do |event|
 end
 
 command_handler.ready {
-  command_handler.update_status("online", "the world burn", nil, 0, false, 3)
+  string = "this text scroll "
+  loop do
+    2.times do
+      c = string[0]
+
+      i = 0
+      while i < string.length - 1
+        string[i] = string[i + 1]
+        i += 1
+      end
+
+      string[-1] = c
+    end
+
+    command_handler.update_status("online", string, nil, 0, false, 3)
+    sleep 7
+  end
 }
 
 command_handler.run
