@@ -16,6 +16,11 @@ command_handler = Discordrb::Commands::CommandBot.new(
   prefix: PREFIX
 )
 
+command_handler.command(:covidstats) do |event|
+  country_code = event.content.split[1]
+  event.respond("```" + `curl -s https://corona-stats.online/#{country_code}?minimal=true | sed 's/\x1b\[[0-9;]*m//g' | head -3` + "```")
+end
+
 command_handler.command(:roll) do |event|
   event.respond("You rolled a #{rand(1..6)}")
 end
@@ -250,5 +255,9 @@ command_handler.member_join do |event|
       "send `;help` to get help"
     )
 end
+
+command_handler.ready {
+  command_handler.update_status("online", "the world burn", nil, 0, false, 3)
+}
 
 command_handler.run
