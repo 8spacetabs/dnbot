@@ -258,20 +258,18 @@ end
 command_handler.ready {
   string = "this text scroll "
   loop do
-    2.times do
-      c = string[0]
+    c = string[0]
 
-      i = 0
-      while i < string.length - 1
-        string[i] = string[i + 1]
-        i += 1
-      end
-
-      string[-1] = c
+    i = 0
+    while i < string.length - 1
+      string[i] = string[i + 1]
+      i += 1
     end
 
+    string[-1] = c
+
     command_handler.update_status("online", string, nil, 0, false, 3)
-    sleep 7
+    sleep 1
   end
 }
 
