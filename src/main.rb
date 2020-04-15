@@ -3,6 +3,7 @@
 require "discordrb"
 load "../aux/heredocs.rb"
 load "../config.rb"
+load "../aux/integer_overload.rb"
 
 init_time = Time.now.to_i 
 dnbot = Discordrb::Bot.new(
@@ -16,8 +17,13 @@ command_handler = Discordrb::Commands::CommandBot.new(
 )
 
 command_handler.command(:covidstats) do |event|
-  country_code = event.content.split[1]
-  event.respond("```" + `curl -s https://corona-stats.online/#{country_code}?minimal=true | sed 's/\x1b\[[0-9;]*m//g' | head -3` + "```")
+  arg_array =  event.content.split
+  if arg_array.length > 1
+    country_code = arg_array[1]
+    event.respond("```#{`curl -s https://corona-stats.online/#{country_code}?minimal=true | sed 's/\x1b\[[0-9;]*m//g' | head -3`}```")
+  else
+    event.respond("```#{`curl -s https://corona-stats.online/?minimal=true | sed 's/\x1b\[[0-9;]*m//g' | head -11`}```")
+  end
 end
 
 command_handler.command(:roll) do |event|
@@ -51,6 +57,11 @@ end
 command_handler.command(:remindme) do |event|
   arg_array = event.content.split
 
+  if arg_array.length == 1
+    event.respond("```usage: ;remindme [integer] (seconds|minutes|hours)```")
+    break
+  end
+
   if arg_array[1].respond_to?(:to_i) && arg_array[2] =~ /(seconds|minutes|hours)/
     Thread.new {
       sleep arg_array[1].to_i * (
@@ -74,20 +85,8 @@ end
 
 command_handler.command(:ping) do |event|
   event.channel.start_typing
-  event.respond("I can't be bothered to implement a safe ;ping")
-=begin
-  arg_array = event.content.split
+  event.respond("```#{`ping -w 3 1.1.1.1`}```")
 
-  event.respond(
-    arg_array.length > 1 ?
-      arg_array[1] =~ /([0-9]{1,3}\.){3}[0-9]{1,3}/ ?
-        "```sh\n#{`ping -w 3 #{arg_array[1]}`}\n```"
-      :
-        "```sh\ninvalid\n```"
-    :
-      "```sh\n#{`ping -w 3 1.1.1.1`}\n```"
-  )
-=end
   nil
 end
 
@@ -99,7 +98,7 @@ end
 command_handler.command(:uptime) do |event|
   event.channel.start_typing
   current = Time.now.to_i - init_time
-  event.respond("```\n#{BOT_NAME} has been online for #{current / 60 / 60} hours, #{((current / 60) % 60)} minutes\n```")
+  event.respond("```#{BOT_NAME} has been online for #{current / 60 / 60} hours, #{((current / 60) % 60)} minutes```")
 end
 
 command_handler.command(:echo) do |event|
@@ -110,7 +109,7 @@ end
 
 command_handler.command(:sysuptime) do |event|
   event.channel.start_typing
-  event.respond("```\n#{`uptime`}\n```")
+  event.respond("```#{`uptime`}```")
 end
 
 command_handler.command(:help) do |event|
@@ -132,8 +131,13 @@ command_handler.command(:purge) do |event|
 end
 
 command_handler.command(:roles) do |event|
-  event.channel.start_typing
   arg_array = event.content.split
+  if arg_array.length == 1
+    event.respond("```usage: ;roles (add|remove) [roles]```")
+    break
+  end
+
+  event.channel.start_typing
   event.respond($roles) if arg_array.length == 1
 
   message = ""
@@ -162,12 +166,11 @@ end
 
 command_handler.command(:poll) do |event|
   arg_array = event.content.split
-  if arg_array.length <3 # uwu
-    event.respond("you must supply at least 2 options")
+  if arg_array.length < 3
+    event.respond("```usage: ;poll [options]```")
     break
   end
 
-  load("../aux/integer_overload.rb")
   event.message.delete
   dnbot_message = event.respond(event.content[5..-1])
   (arg_array.length - 1).times do |n|

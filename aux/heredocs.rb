@@ -86,6 +86,9 @@ $help_msg = <<-HEREDOC
 ```md
 commands:
 =========
++ ;covidstats
+  - show the COVID-19 stats for your region: `;covidstats <region>`
+
 + ;help
   - display this help message
 
