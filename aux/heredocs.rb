@@ -79,6 +79,8 @@ WMs/DEs
 misc
 ====
 + Polls
+
+usage: ;roles (add|remove) [roles]
 ```
 HEREDOC
 

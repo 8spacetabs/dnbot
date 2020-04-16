@@ -132,10 +132,6 @@ end
 
 command_handler.command(:roles) do |event|
   arg_array = event.content.split
-  if arg_array.length == 1
-    event.respond("```usage: ;roles (add|remove) [roles]```")
-    break
-  end
 
   event.channel.start_typing
   event.respond($roles) if arg_array.length == 1
