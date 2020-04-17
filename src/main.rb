@@ -270,6 +270,16 @@ command_handler.ready {
     command_handler.update_status("online", string, nil, 0, false, 3)
     sleep 1
   end
+
+=begin
+  chars = ['|', '/', '-', '\\']
+  i = 0
+  loop do
+    char = chars[(i += 1) % 4]
+    command_handler.update_status("online", char, nil, 0, false, 3)
+
+  end
+=end
 }
 
 command_handler.run

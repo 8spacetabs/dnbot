@@ -9,6 +9,7 @@ Linux Distros
 + Fedora
 + Gentoo
 + Kali
++ LionOS
 + Manjaro
 + Mint
 + MXLinux
@@ -19,7 +20,7 @@ Linux Distros
 + RedHat
 + Slackware
 + Solus
-+ ubuntu
++ Ubuntu
 + Void
 BSDs
 ====
