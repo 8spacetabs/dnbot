@@ -255,15 +255,7 @@ command_handler.member_join do |event|
 end
 
 command_handler.ready do
-  loop do
-    sleep 2
-    command_handler.update_status("online", " * * * * *", nil, 0, false, 3)
-    sleep 2                               
-    command_handler.update_status("online", "* * * * * ", nil, 0, false, 3)
-  end
-
-=begin
-  string = "this text scroll "
+  string = "*          "
   loop do
     c = string[0]
 
@@ -278,7 +270,6 @@ command_handler.ready do
     command_handler.update_status("online", string, nil, 0, false, 3)
     sleep 1
   end
-=end
 
 =begin
   chars = ['|', '/', '-', '\\']
