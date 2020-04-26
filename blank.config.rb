@@ -1,24 +1,28 @@
 # ID of positive vote emoji <string>
-VOTE_YES_EMOJI=
+VOTE_YES_EMOJI = 
 # ID of negative vote emoji <string>
-VOTE_NO_EMOJI=
+VOTE_NO_EMOJI = 
 # ID of channel where join messages are sent <int>
-JOIN_MSG_CHAN_ID=
+JOIN_MSG_CHAN_ID = 
 # ID of default role assigned on join <int>
-DEFAULT_ROLE_ID=
+DEFAULT_ROLE_ID = 
 # Flag to indicate if there is a default role <bool>
-DEFAULT_ROLE=
+DEFAULT_ROLE = 
 # ID of mute role <int>
-MUTE_ROLE_ID=
+MUTE_ROLE_ID = 
 # Server name <string>
-SERVER_NAME=
+SERVER_NAME = 
 # Admin roles <regex>
-ADMIN_ROLES=
+ADMIN_ROLES = 
 # Bot name <string>
-BOT_NAME=
+BOT_NAME = 
 # Bot prefix <string>
-PREFIX=
+PREFIX = 
 # Bot token <string>
-TOKEN=
+TOKEN = 
 # Bot account ID <int>
-ID=
+ID = 
+# time in seconds to wait before updating status <int>
+STATUS_UPDATE_DELAY =
+# statuses rotated every STATUS_UPDATE_DELAY mins Hash<string, int>
+STATUSES =
