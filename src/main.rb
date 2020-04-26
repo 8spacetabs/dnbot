@@ -254,12 +254,12 @@ command_handler.member_join do |event|
     )
 end
 
-command_handler.ready {
+command_handler.ready do
   loop do
     sleep 2
-    command_handler.update_status(" * * * * *", string, nil, 0, false, 3)
-    sleep 2
-    command_handler.update_status("* * * * * ", string, nil, 0, false, 3)
+    command_handler.update_status("online", " * * * * *", nil, 0, false, 3)
+    sleep 2                               
+    command_handler.update_status("online", "* * * * * ", nil, 0, false, 3)
   end
 
 =begin
@@ -289,6 +289,6 @@ command_handler.ready {
 
   end
 =end
-}
+end
 
 command_handler.run
