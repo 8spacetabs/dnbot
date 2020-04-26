@@ -96,7 +96,7 @@ commands:
   - display this help message
 
 + ;ping
-  - unix ping command: `;ping [IPv4 address]`
+  - shows ping stats
 
 + ;roles
   - if no arguments are specified all available roles are listed:

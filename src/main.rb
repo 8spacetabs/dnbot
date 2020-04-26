@@ -58,7 +58,7 @@ command_handler.command(:remindme) do |event|
   arg_array = event.content.split
 
   if arg_array.length == 1
-    event.respond("```usage: ;remindme [integer] (seconds|minutes|hours)```")
+    event.respond("```usage: ;remindme <integer> (seconds|minutes|hours)```")
     break
   end
 
@@ -255,6 +255,14 @@ command_handler.member_join do |event|
 end
 
 command_handler.ready {
+  loop do
+    sleep 2
+    command_handler.update_status(" * * * * *", string, nil, 0, false, 3)
+    sleep 2
+    command_handler.update_status("* * * * * ", string, nil, 0, false, 3)
+  end
+
+=begin
   string = "this text scroll "
   loop do
     c = string[0]
@@ -270,6 +278,7 @@ command_handler.ready {
     command_handler.update_status("online", string, nil, 0, false, 3)
     sleep 1
   end
+=end
 
 =begin
   chars = ['|', '/', '-', '\\']
