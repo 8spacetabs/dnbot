@@ -52,9 +52,11 @@ Programming languages
 + Julia
 + Kotlin
 + Lisp
++ Miranda
 + Objective-C
 + OCaml
 + Perl
++ Python
 + PHP
 + R
 + Ruby
@@ -66,6 +68,7 @@ Programming languages
 + TypeScript
 WMs/DEs
 =====
++ AwesomeWM
 + bspwm
 + Cinnamon
 + dwm
