@@ -249,7 +249,7 @@ command_handler.member_join do |event|
         event.server.member_count -
         event.server.members.select(&:bot_account?).length
       }\n" + 
-      "send `;roles` to see roles\n" +
+      "send `;roles` in #{dnbot.channel(555197515209768971).mention} to see roles\n" +
       "send `;help` to get help"
     )
 end
