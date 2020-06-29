@@ -4,6 +4,7 @@ Linux Distros
 =============
 + Alpine
 + Arch
++ Artix
 + Bedrock
 + Debian
 + Fedora
