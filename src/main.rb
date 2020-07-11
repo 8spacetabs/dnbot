@@ -16,6 +16,10 @@ command_handler = Discordrb::Commands::CommandBot.new(
   prefix: PREFIX
 )
 
+command_handler.command(:invite) do |event|
+  event.respond(INVITE_LINK)
+end
+
 command_handler.command(:covidstats) do |event|
   arg_array =  event.content.split
   if arg_array.length > 1
