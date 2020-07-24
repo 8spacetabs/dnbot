@@ -26,3 +26,5 @@ ID =
 STATUS_UPDATE_DELAY =
 # statuses rotated every STATUS_UPDATE_DELAY mins Hash<string, int>
 STATUSES =
+# toggle logging <bool>
+LOG_CMDS = true

@@ -16,8 +16,25 @@ command_handler = Discordrb::Commands::CommandBot.new(
   prefix: PREFIX
 )
 
+logfile = LOG_CMDS ? File.new("../cmdlog.txt", "a+") : nil
+$logcache = Array.new
+
+def log(event, file)
+  if LOG_CMDS
+    entry = "[#{Time.now}] #{event.author.name}##{event.author.tag}: \"#{event.content}\"\n"
+    print entry
+    file.syswrite(entry)
+    $logcache.push(entry)
+  end
+
+  nil
+end
+
 command_handler.command(:invite) do |event|
   event.respond(INVITE_LINK)
+  log(event, logfile)
+
+  nil
 end
 
 command_handler.command(:covidstats) do |event|
@@ -28,23 +45,38 @@ command_handler.command(:covidstats) do |event|
   else
     event.respond("```#{`curl -s https://corona-stats.online/?minimal=true | sed 's/\x1b\[[0-9;]*m//g' | head -11`}```")
   end
+  log(event, logfile)
+
+  nil
 end
 
 command_handler.command(:roll) do |event|
   event.respond("You rolled a #{rand(1..6)}")
+  log(event, logfile)
+
+  nil
 end
 
 command_handler.command(:flip) do |event|
   event.respond(rand(10) < 5 ? "heads" : "tails")
+  log(event, logfile)
+
+  nil
 end
 
 command_handler.command(:ask) do |event|
   event.respond($ask_paste)
+  log(event, logfile)
+
+  nil
 end
 
 command_handler.command(:hackerman) do |event|
   event.message.delete
   event.respond($hackerman_paste)
+  log(event, logfile)
+
+  nil
 end
 
 command_handler.command(:zoomer) do |event|
@@ -55,6 +87,8 @@ command_handler.command(:zoomer) do |event|
   else
     event.respond("I'm sorry #{event.author.name}, I'm afraid I can't do that.")
   end
+  log(event, logfile)
+
   nil
 end
 
@@ -84,12 +118,15 @@ command_handler.command(:remindme) do |event|
   else
     event.respond("Invalid arguments, see ;help output")
   end
+  log(event, logfile)
+
   nil
 end
 
 command_handler.command(:ping) do |event|
   event.channel.start_typing
   event.respond("```#{`ping -w 3 1.1.1.1`}```")
+  log(event, logfile)
 
   nil
 end
@@ -97,28 +134,43 @@ end
 command_handler.command(:time) do |event|
   event.channel.start_typing
   event.respond("```\n#{Time.now}\n```")
+  log(event, logfile)
+
+  nil
 end
 
 command_handler.command(:uptime) do |event|
   event.channel.start_typing
   current = Time.now.to_i - init_time
   event.respond("```#{BOT_NAME} has been online for #{current / 60 / 60} hours, #{((current / 60) % 60)} minutes```")
+  log(event, logfile)
+
+  nil
 end
 
 command_handler.command(:echo) do |event|
   event.message.delete
   event.channel.start_typing
   event.respond(event.content[5..-1])
+  log(event, logfile)
+
+  nil
 end
 
 command_handler.command(:sysuptime) do |event|
   event.channel.start_typing
   event.respond("```#{`uptime`}```")
+  log(event, logfile)
+
+  nil
 end
 
 command_handler.command(:help) do |event|
   event.channel.start_typing
   event.respond($help_msg)
+  log(event, logfile)
+
+  nil
 end
 
 command_handler.command(:purge) do |event|
@@ -132,6 +184,9 @@ command_handler.command(:purge) do |event|
   else
     event.respond("I'm sorry #{event.author.name}, I'm afraid I can't do that.")
   end
+  log(event, logfile)
+
+  nil
 end
 
 command_handler.command(:roles) do |event|
@@ -161,6 +216,8 @@ command_handler.command(:roles) do |event|
     when "remove"
       event.respond("roles removed: #{message}")
   end
+  log(event, logfile)
+
   nil
 end
 
@@ -177,6 +234,8 @@ command_handler.command(:poll) do |event|
     dnbot_message.react(n.to_reaction_monkey_edition)
   end
 
+  log(event, logfile)
+
   nil
 end
 
@@ -185,6 +244,9 @@ command_handler.command(:vote) do |event|
   dnbot_message = event.respond(event.content[5..-1])
   dnbot_message.react(VOTE_YES_EMOJI)
   dnbot_message.react(VOTE_NO_EMOJI)
+  log(event, logfile)
+
+  nil
 end
 
 command_handler.command(:kick) do |event|
@@ -197,6 +259,9 @@ command_handler.command(:kick) do |event|
   else
     event.respond("I'm sorry #{event.author.name}, I'm afraid I can't do that.")
   end
+  log(event, logfile)
+
+  nil
 end
 
 command_handler.command(:ban) do |event|
@@ -209,6 +274,8 @@ command_handler.command(:ban) do |event|
   else
     event.respond("I'm sorry #{event.author.name}, I'm afraid I can't do that.")
   end
+  log(event, logfile)
+
   nil
 end
 
@@ -221,6 +288,9 @@ command_handler.command(:mute) do |event|
   else
     event.respond("I'm sorry #{event.author.name}, I'm afraid I can't do that.")
   end
+  log(event, logfile)
+
+  nil
 end
 
 command_handler.command(:unmute) do |event|
@@ -232,15 +302,60 @@ command_handler.command(:unmute) do |event|
   else
     event.respond("I'm sorry #{event.author.name}, I'm afraid I can't do that.")
   end
+  log(event, logfile)
+
+  nil
 end
 
 command_handler.command(:kill) do |event|
   if event.author.highest_role.name =~ ADMIN_ROLES
     event.respond("goodbye")
-    exit 1
+    logfile.close if LOG_CMDS
+    exit 0
   else
     event.respond("I'm sorry #{event.author.name}, I'm afraid I can't do that.")
   end
+  log(event, logfile)
+
+  nil
+end
+
+command_handler.command(:sendlog) do |event|
+  if event.author.highest_role.name =~ ADMIN_ROLES
+    if LOG_CMDS
+      logfile.seek(0, IO::SEEK_SET)
+      dnbot.send_file(546320752153067530, logfile)
+
+      # for some reason send_file closes the stream
+      logfile = File.new("../cmdlog.txt", "a+")
+    else
+      event.respond("logging is not enabled")
+      return nil
+    end
+  else
+    event.respond("I'm sorry #{event.author.name}, I'm afraid I can't do that.")
+  end
+  log(event, logfile)
+
+  nil
+end
+
+command_handler.command(:showlog) do |event|
+  if event.author.highest_role.name =~ ADMIN_ROLES
+    if LOG_CMDS
+      $logcache[($logcache.length - event.content.split[1].to_i - 1)..(-1)].each do |entry|
+        dnbot.channel(546320752153067530).send(entry)
+      end
+    else
+      event.respond("logging is not enabled")
+      return nil
+    end
+  else
+    event.respond("I'm sorry #{event.author.name}, I'm afraid I can't do that.")
+  end
+  log(event, logfile)
+
+  nil
 end
 
 command_handler.member_join do |event|
