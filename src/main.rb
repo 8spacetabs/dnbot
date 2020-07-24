@@ -1,5 +1,11 @@
 #!/usr/bin/ruby
 
+=begin
+          This is becoming a mess of ugly hacks and poorly written code,
+          if I can't reduce complexity then it might be time for a full
+          rewrite in some other language using some other library.
+=end
+
 require "discordrb"
 load "../aux/heredocs.rb"
 load "../config.rb"
