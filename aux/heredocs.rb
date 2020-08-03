@@ -140,6 +140,11 @@ commands:
 
 + ;ask
   - for people asking if they can ask a question, please don't spam this one
+
++ ;xkcd
+  - if no arguments are specified then a random xkcd comic is fetched
+        `;roles`
+  - with `recent` as the first argument the most recent comic is fetched
 ```
 HEREDOC
 
