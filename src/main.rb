@@ -36,6 +36,15 @@ def log(event, file)
   nil
 end
 
+command_handler.command(:xkcd) do |event|
+  if event.content.split[1] == "recent"
+    event.respond("https://xkcd.com/#")
+  else
+    event.respond("https://xkcd.com/#{rand(1..2340)}")
+  end
+  log(event, logfile)
+end
+
 command_handler.command(:invite) do |event|
   event.respond(INVITE_LINK)
   log(event, logfile)
