@@ -1,11 +1,5 @@
 #!/usr/bin/ruby
 
-=begin
-          This is becoming a mess of ugly hacks and poorly written code,
-          if I can't reduce complexity then it might be time for a full
-          rewrite in some other language using some other library.
-=end
-
 require "discordrb"
 load "../aux/heredocs.rb"
 load "../config.rb"
@@ -397,30 +391,17 @@ command_handler.ready do
   end
 
 =begin
-  string = "this text scroll"
   loop do
-    c = string[0]
-
-    i = 0
-    while i < string.length - 1
-      string[i] = string[i + 1]
-      i += 1
+    [
+      "a worm _/\\__",
+      "a worm _______",
+      "a worm .._/\\__",
+      "a worm .._______",
+      "a worm ...._/\\__"
+    ].each do |frame|
+      command_handler.update_status("online", frame, nil, 0, false, 3)
+      sleep 0.5
     end
-
-    string[-1] = c
-
-    command_handler.update_status("online", string, nil, 0, false, 3)
-    sleep 1
-  end
-=end
-
-=begin
-  chars = ['|', '/', '-', '\\']
-  i = 0
-  loop do
-    char = chars[(i += 1) % 4]
-    command_handler.update_status("online", char, nil, 0, false, 3)
-
   end
 =end
 end
