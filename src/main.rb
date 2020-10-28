@@ -320,7 +320,9 @@ command_handler.command(:kill) do |event|
   if event.author.highest_role.name =~ ADMIN_ROLES
     event.respond("goodbye")
     logfile.close if LOG_CMDS
-    exit 0
+
+    command_handler.stop()
+    dnbot.stop()
   else
     event.respond("I'm sorry #{event.author.name}, I'm afraid I can't do that.")
   end
@@ -377,33 +379,25 @@ command_handler.member_join do |event|
         event.server.member_count -
         event.server.members.select(&:bot_account?).length
       }\n" + 
-      "send `;roles` in #{dnbot.channel(555197515209768971).mention} to see roles\n" +
+      "send `;roles` in #{dnbot.channel(BOT_CHAN_ID).mention} to see roles\n" +
       "send `;help` to get help"
     )
+
+  command_handler.servers[0].voice_channels[0].delete()
+  command_handler.servers[0].create_channel(
+    "Member count: " + command_handler.servers[0].member_count.to_s, 2, nil, nil, 0, nil, nil, false, nil, nil)
 end
 
 command_handler.ready do
+  command_handler.servers[0].create_channel(
+    "Member count: " + command_handler.servers[0].member_count.to_s, 2, nil, nil, 0, nil, nil, false, nil, nil)
+
   loop do
     STATUSES.each do |msg, act|
       command_handler.update_status("online", msg, nil, 0, false, act)
       sleep 600
     end
   end
-
-=begin
-  loop do
-    [
-      "a worm _/\\__",
-      "a worm _______",
-      "a worm .._/\\__",
-      "a worm .._______",
-      "a worm ...._/\\__"
-    ].each do |frame|
-      command_handler.update_status("online", frame, nil, 0, false, 3)
-      sleep 0.5
-    end
-  end
-=end
 end
 
 command_handler.run
